@@ -1,0 +1,9 @@
+.carousel-container {
+    height: 300px;
+}
+.carousel-container > ul {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

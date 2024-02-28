@@ -1,0 +1,25 @@
+.banner { 
+    position: relative;
+    height: 56vh; 
+    background: no-repeat center/cover;
+}
+.banner::before {
+    content: '';
+    background: linear-gradient(to top, black, transparent);
+    position: absolute;
+    left: 0;
+    height: 56vh;
+    width: 100%;
+}
+.banner-info {
+    width: 100%;
+    max-width: 1280px;
+    padding: 50px;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    color: #fff;
+}
+.banner-info > h1 { font-size: 80px; font-weight: 800; }
+.banner-info > h2 { font-size: 30px; }
