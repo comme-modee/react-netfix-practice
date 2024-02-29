@@ -23,3 +23,8 @@
 }
 .banner-info > h1 { font-size: 80px; font-weight: 800; }
 .banner-info > h2 { font-size: 30px; }
+
+@media screen and (max-width: 480px) {
+    .banner-info > h1 { font-size: 30px; font-weight: 800; }
+    .banner-info > h2 { font-size: 14px; }
+}

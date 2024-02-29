@@ -4,7 +4,7 @@ import { Alert } from 'bootstrap'
 import { responsive } from '../../../../constants/responsive';
 import MovieSlieder from '../../../../common/MovieSlider/MovieSlider';
 
-const PopularMovieSlide = () => {
+const PopularMovieSlide = () => {   
     const { data, isLoading, isError, error } = usePopularMoviesQuery()
 
     if(isLoading){
@@ -14,7 +14,7 @@ const PopularMovieSlide = () => {
         return <Alert variant='danger'>{error.message}</Alert>
     }
   return (
-    <div>
+    <div className='movie-slider'>
         <MovieSlieder 
             title='Popular Movies' 
             movies={data.results} 

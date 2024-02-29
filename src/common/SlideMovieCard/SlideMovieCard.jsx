@@ -1,9 +1,9 @@
-import './MovieCard.style.css';
 import Badge from 'react-bootstrap/Badge';
 import { useMovieGenreQuery } from '../../hooks/useMovieGenreList';
+import './SlideMovieCard.style.css';
 import { useNavigate } from 'react-router-dom';
 
-const MovieCard = ({ movie }) => {
+const SlideMovieCard = ({ movie }) => {
   const navigate = useNavigate()
   const { data:genreData } = useMovieGenreQuery()
 
@@ -16,14 +16,13 @@ const MovieCard = ({ movie }) => {
 
     return gerneNameList
   }
-
   const moveToDetailPage = () => {
     navigate(`/movies/${movie.id}`)
   }
 
   return (
     <div
-        className='movie-card'
+        className='slide-movie-card'
         style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w300_and_h450_bestv2/${movie.poster_path})` }}
         onClick={moveToDetailPage}
     >
@@ -40,4 +39,4 @@ const MovieCard = ({ movie }) => {
   )
 }
 
-export default MovieCard
+export default SlideMovieCard
