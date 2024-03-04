@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { usePopularMoviesQuery } from '../../../../hooks/usePopularMovies'
 import Alert from 'react-bootstrap/Alert';
 import './Banner.style.css';
@@ -11,9 +11,16 @@ import YouTube from 'react-youtube';
 
 const Banner = () => {
     const { data, isLoading, isError, error } = usePopularMoviesQuery()
-    let id = data?.results[0].id;
+    const [ id, setId ] = useState(null);
     const { data:videoData } = useMovieVideoQuery(id)
-    const [show, setShow] = useState(false);
+    const [ show, setShow ] = useState(false);
+
+    useEffect(() => {
+        // 데이터가 사용 가능하고 결과가 있을 경우 id를 설정합니다.
+        if (data) {
+            setId(data.results[0].id);
+        }
+    }, [data]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);  
