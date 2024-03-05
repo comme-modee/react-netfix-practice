@@ -13,6 +13,9 @@ import { useMovieRecommendations } from '../../hooks/useGetMovieRecommendations'
 import MovieCard from '../../common/MovieCard/MovieCard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import Modal from 'react-bootstrap/Modal';
+import YouTube from 'react-youtube';
+import { useMovieVideoQuery } from '../../hooks/useGetMovieVideo'
 
 const MovieDetailPage = () => {
   //주소 뒤에 파라미터값을 useParams를 이용해 받아온다.
@@ -21,8 +24,10 @@ const MovieDetailPage = () => {
   const { data:genreDataList } = useMovieGenreQuery()
   const { data:reviewData } = useMovieReviewsQuery(id)
   const { data:RecommendationsData } = useMovieRecommendations(id)
+  const { data:videoData } = useMovieVideoQuery(id)
+  const [ show, setShow ] = useState(false);
 
-  console.log("추천 영화", RecommendationsData)
+  console.log("비디오", videoData)
   
   useEffect(()=>{
     if(data) {
@@ -31,7 +36,7 @@ const MovieDetailPage = () => {
   },[data])
 
   useEffect(()=>{
-    console.log("id: ", data)
+    console.log("id: ", id)
   },[id])
 
   if(isLoading) {
@@ -72,10 +77,25 @@ const MovieDetailPage = () => {
       </div>
     );
   };
-
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);  
 
   return (
     <div>
+      <Modal
+          data-bs-theme="dark"
+          size="lg"
+          show={show}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+          centered
+      >
+          <Modal.Header closeButton></Modal.Header>
+          <Modal.Body>
+              <YouTube videoId={videoData?videoData[0].key:''}/>
+          </Modal.Body>
+      </Modal>
       <div 
           style={{
               backgroundImage: `url(https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces/${data?.backdrop_path}`,
@@ -85,7 +105,7 @@ const MovieDetailPage = () => {
           <div className='banner-info'>
               <h1>{data?.title}</h1>
               <h2>{data?.overview}</h2>
-              <button className='play-btn'><FontAwesomeIcon icon={faPlay} />재생</button>
+              <Button className='play-btn' onClick={handleShow}><FontAwesomeIcon icon={faPlay} />재생</Button>
           </div>
       </div>
       <Container className='main-info-container'>

@@ -7,7 +7,7 @@ const fetchMovieVideo = (id) => {
 
 export const useMovieVideoQuery = (id) => {
     return useQuery({
-        queryKey: ['movie-recommendations'],
+        queryKey: ['movie-videos'],
         queryFn: () => fetchMovieVideo(id),
         select: (result) => result.data.results
     })

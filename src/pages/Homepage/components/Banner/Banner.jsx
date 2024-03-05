@@ -9,29 +9,28 @@ import Modal from 'react-bootstrap/Modal';
 import { useMovieVideoQuery } from '../../../../hooks/useGetMovieVideo';
 import YouTube from 'react-youtube';
 
+
 const Banner = () => {
     const { data, isLoading, isError, error } = usePopularMoviesQuery()
-    const [ id, setId ] = useState(null);
-    const { data:videoData } = useMovieVideoQuery(id)
+    const videoId = data?.results[0].id
+    const { data:videoData } = useMovieVideoQuery(videoId)
+    console.log("비디오 아이디:", videoId, "비디오 데이터", videoData)
+    // const [ id, setId ] = useState(null);
     const [ show, setShow ] = useState(false);
-
-    useEffect(() => {
-        // 데이터가 사용 가능하고 결과가 있을 경우 id를 설정합니다.
-        if (data) {
-            setId(data.results[0].id);
-        }
-    }, [data]);
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);  
     
+    useEffect(() => {
+        
+    }, [videoId]);
+    
+
     if(isLoading) {
-        return <h1>Lodaing...</h1>
+        return <h1>Loading...</h1>
     }
     if(isError) {
         return <Alert variant='danger'>{error.message}</Alert>
     }
-    console.log(id, data, videoData)
 
   return (
     <div 
@@ -57,7 +56,11 @@ const Banner = () => {
         >
             <Modal.Header closeButton></Modal.Header>
             <Modal.Body>
-                <YouTube videoId={videoData?videoData[0].key:''}/>
+            {videoData ? (
+                <YouTube videoId={videoData[0]?.key} />
+            ) : (
+                <div>Loading...</div>
+            )}
             </Modal.Body>
         </Modal>
     </div>
