@@ -1,2 +1,23 @@
 body { background-color: #000; color: #fff; }
 .movie-slider { padding: 20px 40px; }
+
+.loading {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 40px auto;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    border-top-color: #D91921;
+    border-bottom-color: #D91921;
+    border-left-color: #D91921;
+    animation: spinner .8s cubic-bezier(0.685, 0.100, 0.365, 0.950) infinite;
+}
+
+@keyframes spinner {
+    from {transform: rotate(0deg); }
+    to {transform: rotate(360deg);}
+}

@@ -9,6 +9,7 @@ export const useMovieVideoQuery = (id) => {
     return useQuery({
         queryKey: ['movie-videos'],
         queryFn: () => fetchMovieVideo(id),
-        select: (result) => result.data.results
+        select: (result) => result.data.results.filter((video) => video.type === "Trailer" ),
+        refetchOnMount: false
     })
 }

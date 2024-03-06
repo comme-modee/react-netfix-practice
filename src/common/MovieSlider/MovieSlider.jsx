@@ -17,7 +17,7 @@ const MovieSlieder = ({title, movies, responsive}) => {
             showDots={true}
             dotListClass="custom-dot-list-style"
         >
-            {movies.map((movie, index) => <SlideMovieCard movie={movie} key={index}/>)}
+            {movies&& movies.map((movie, index) => <SlideMovieCard movie={movie} key={index}/>)}
         </Carousel>
     </div>
   )

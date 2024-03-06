@@ -28,7 +28,7 @@ const SlideMovieCard = ({ movie }) => {
     >
         <div className='movie-card-info'>
             <h1>{movie.title}</h1>
-            {showGenre(movie.genre_ids).map((id) =>  <Badge bg="danger">{id}</Badge> )}
+            {showGenre(movie.genre_ids).map((id) =>  <Badge bg="success me-2" key={id}>{id}</Badge> )}
             <div>
                 <div>{movie.vote_average}</div>
                 <div>{movie.popularity}</div>
