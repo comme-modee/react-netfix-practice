@@ -38,24 +38,23 @@ const MovieDetailPage = () => {
     console.log("id: ", id)
     console.log("videoData: ", videoData)
     
-    
-
   },[data, id, videoData])
 
 
   if(isLoading) {
       return <div className='loading'></div>
-  }
-  if(isError) {
-      return <Alert variant='danger'>{error.message}</Alert>
-  }
-  if(!isLoading) {
+  } else {
     if(videoData.length > 0) {
       videoKey = videoData[0].key;
     } else if (videoData.length === 0) {
       console.log("비디오없음")
     }
   }
+  
+  if(isError) {
+      return <Alert variant='danger'>{error.message}</Alert>
+  }
+
   
 
   const showGenre = (genreIdList) => {
@@ -132,7 +131,7 @@ const MovieDetailPage = () => {
           <div className='banner-info'>
               <h1>{data?.title}</h1>
               <h2>{data?.tagline}</h2>
-              {videoData?<Button className='play-btn' onClick={handleShow}><FontAwesomeIcon icon={faPlay} />재생</Button>:''}
+              {videoData.length > 0 ? <Button className='play-btn' onClick={handleShow}><FontAwesomeIcon icon={faPlay} />재생</Button>:''}
           </div>
       </div>
       <Container className='main-info-container'>
