@@ -1,1 +1,5 @@
-.pagination { padding: 40px 0; }
+.pagination { padding: 40px 0; justify-content: center; }
+.pagination .page-link { background-color: #111; color: #fff; }
+.pagination .page-link:hover { color: #141414; }
+.pagination .active .page-link { background-color: #D91921; color: #fff; border-color: #fff; }
+.pagination .disabled .page-link { background-color: #2f3235; color: #fff; }

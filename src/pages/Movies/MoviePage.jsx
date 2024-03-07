@@ -25,7 +25,7 @@ const MoviePage = () => {
   useEffect(()=>{
     if(data) {
       setFilteredList(data)
-      console.log(data.results)
+      // console.log(data.results)
     }
   },[data])
   
@@ -42,7 +42,7 @@ const MoviePage = () => {
   
   const sortedPopularity = () => {
     setSortTitle('인기순')
-    console.log("인기순")
+    // console.log("인기순")
     const sortData = data.results.sort(function(a, b) {
       return b.popularity - a.popularity;
     });
@@ -55,7 +55,7 @@ const MoviePage = () => {
 
   const sortedVoteAverage = () => {
     setSortTitle('평점순')
-    console.log("평점순")
+    // console.log("평점순")
     const sortData = data.results.sort(function(a, b) {
       return b.vote_average - a.vote_average;
     });
@@ -64,9 +64,9 @@ const MoviePage = () => {
 
   const sortedByGenre = (selectedId, genre) => {
     setGenreTitle(genre)
-    console.log("장르별", selectedId)
+    // console.log("장르별", selectedId)
     const sortData = data.results.filter((movie) => movie.genre_ids.includes(selectedId))
-    console.log(sortData)
+    // console.log(sortData)
     setFilteredList({...data, results:sortData})
   }
   

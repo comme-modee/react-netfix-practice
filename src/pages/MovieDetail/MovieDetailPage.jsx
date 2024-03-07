@@ -7,10 +7,7 @@ import { Badge, Col, Container, Row, Button } from 'react-bootstrap'
 import { useMovieGenreQuery } from '../../hooks/useMovieGenreList'
 import './MovieDetailPage.style.css'
 import { useMovieReviewsQuery } from '../../hooks/useMovieReviews'
-// import Tab from 'react-bootstrap/Tab';
-// import Tabs from 'react-bootstrap/Tabs';
 import { useMovieRecommendations } from '../../hooks/useGetMovieRecommendations'
-// import MovieCard from '../../common/MovieCard/MovieCard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faPlay, faStar } from '@fortawesome/free-solid-svg-icons'
 import Modal from 'react-bootstrap/Modal';
@@ -23,38 +20,47 @@ import { responsive } from '../../constants/responsive'
 const MovieDetailPage = () => {
   //주소 뒤에 파라미터값을 useParams를 이용해 받아온다.
   let { id } = useParams();
-  let { data, isLoading, isError, error } = useMovieDetailPage(id);
+  const { data, isLoading:isDataLoading, isError:isDataError, error:dataError } = useMovieDetailPage(id);
+  const { data:reviewData, isLoading:isReviewLoading, isError:isReviewError, error:reviewError } = useMovieReviewsQuery(id);
+  const { data:RecommendationsData, isLoading:isRecommendationsDataLoading, isError:isRecommendationsDataError, error:recommendationsDataError } = useMovieRecommendations(id);
+  const { data:videoData, isLoading:isVideoLoading, isError:isVideoError, error:videoError } = useMovieVideoQuery(id);
   const { data:genreDataList } = useMovieGenreQuery();
-  const { data:reviewData } = useMovieReviewsQuery(id);
-  const { data:RecommendationsData } = useMovieRecommendations(id);
-  const { data:videoData } = useMovieVideoQuery(id);
-  const [ show, setShow ] = useState(false);
-  let videoKey = '';
-
   
+  const [ show, setShow ] = useState(false);
+  const [ videoKey, setVideoKey ] = useState('');
+  const [ videoExists, setVideoExists ] = useState(false);
+ 
   useEffect(()=>{
     
-    console.log("data: ", data)
-    console.log("id: ", id)
-    console.log("videoData: ", videoData)
-    
-  },[data, id, videoData])
-
-
-  if(isLoading) {
-      return <div className='loading'></div>
-  } else {
-    if(videoData.length > 0) {
-      videoKey = videoData[0].key;
-    } else if (videoData.length === 0) {
-      console.log("비디오없음")
+    // console.log("data: ", data)
+    // console.log("id: ", id)
+    // console.log("videoData: ", videoData)
+    if(videoData && videoData.length!==0) {
+      // console.log("비디오있음", videoExists)
+      setVideoExists(true)
+      setVideoKey(videoData[0].key)
+    } else {
+      setVideoExists(false)
+      // console.log("비디오없음", videoExists)
     }
-  }
-  
-  if(isError) {
-      return <Alert variant='danger'>{error.message}</Alert>
-  }
+    // console.log("videoKey: ", videoKey)
+    
+  },[data, id, videoData, videoKey, videoExists])
 
+
+  if(isDataLoading || isReviewLoading || isRecommendationsDataLoading || isVideoLoading) {
+    return <div className='loading'></div>
+  } 
+  
+  if(isDataError) {
+    return <Alert variant='danger'>{dataError.message}</Alert>
+  } else if(isReviewError) {
+    return <Alert variant='danger'>{reviewError.message}</Alert>
+  } else if(isRecommendationsDataError) {
+    return <Alert variant='danger'>{recommendationsDataError.message}</Alert>
+  } else if(isVideoError) {
+    return <Alert variant='danger'>{videoError.message}</Alert>
+  }
   
 
   const showGenre = (genreIdList) => {
@@ -90,12 +96,13 @@ const MovieDetailPage = () => {
       </div>
     );
   };
+
+  
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);  
 
   return (
     <div>
-      {videoData.length > 0 ?
         <Modal
             data-bs-theme="dark"
             size="lg"
@@ -119,8 +126,7 @@ const MovieDetailPage = () => {
                   }}
                 />
             </Modal.Body>
-        </Modal> : ''
-      }
+        </Modal>
       
       <div 
           style={{
@@ -131,7 +137,7 @@ const MovieDetailPage = () => {
           <div className='banner-info'>
               <h1>{data?.title}</h1>
               <h2>{data?.tagline}</h2>
-              {videoData.length > 0 ? <Button className='play-btn' onClick={handleShow}><FontAwesomeIcon icon={faPlay} />재생</Button>:''}
+              {videoExists?<Button className='play-btn' onClick={handleShow}><FontAwesomeIcon icon={faPlay} />재생</Button>:''}
           </div>
       </div>
       <Container className='main-info-container'>
@@ -158,8 +164,8 @@ const MovieDetailPage = () => {
 
 
           <Row className='related-movie-container'>
-            <div className='title'>{RecommendationsData.length === 0 ? '0 results' : 'Related Movies'}</div>
-            {RecommendationsData.length === 0 ? <span></span> : (
+            <div className='title'>{RecommendationsData?.length === 0 ? '0 results' : 'Related Movies'}</div>
+            {RecommendationsData?.length === 0 ? <span></span> : (
               <MovieSlieder
                 movies={RecommendationsData} 
                 responsive={responsive}
@@ -171,7 +177,7 @@ const MovieDetailPage = () => {
 
 
           <Row className='review-container'>
-            <div className='title'>{reviewData.length === 0 ? '0 reviews for this movie' : 'Reviews'}</div>
+            <div className='title'>{reviewData?.length === 0 ? '0 reviews for this movie' : 'Reviews'}</div>
             {reviewData?.map((review, index) => 
                 <ReviewComponent key={index} review={review}/>
             )}

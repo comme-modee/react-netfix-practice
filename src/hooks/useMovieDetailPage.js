@@ -7,7 +7,7 @@ const fetchMovieDetailPage = (id) => {
 
 export const useMovieDetailPage = (id) => {
     return useQuery({
-        queryKey: ['movie-detail-page'],
+        queryKey: ['movie-detail-page', id],
         queryFn: () => fetchMovieDetailPage(id),
         select: (result) => result.data
     })

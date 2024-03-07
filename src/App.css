@@ -1,5 +1,5 @@
 body { background-color: #000; color: #fff; }
-.movie-slider { padding: 20px 40px; }
+.movie-slider { width: 100%; max-width: 1800px; padding: 20px 40px; margin: 0 auto; }
 
 .loading {
     position: absolute;
