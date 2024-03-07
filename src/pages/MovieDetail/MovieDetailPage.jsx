@@ -30,16 +30,17 @@ const MovieDetailPage = () => {
   const { data:videoData } = useMovieVideoQuery(id);
   const [ show, setShow ] = useState(false);
   let videoKey = '';
-  console.log("data: ", data)
 
+  
   useEffect(()=>{
-    console.log("id: ", id)
     
+    console.log("data: ", data)
+    console.log("id: ", id)
     console.log("videoData: ", videoData)
-    if(videoData) {
-      videoKey = videoData[0].key;
-    }
-  },[id, videoData])
+    
+    
+
+  },[data, id, videoData])
 
 
   if(isLoading) {
@@ -48,7 +49,14 @@ const MovieDetailPage = () => {
   if(isError) {
       return <Alert variant='danger'>{error.message}</Alert>
   }
-
+  if(!isLoading) {
+    if(videoData.length > 0) {
+      videoKey = videoData[0].key;
+    } else if (videoData.length === 0) {
+      console.log("비디오없음")
+    }
+  }
+  
 
   const showGenre = (genreIdList) => {
     if(!genreDataList) return []
@@ -88,30 +96,33 @@ const MovieDetailPage = () => {
 
   return (
     <div>
-      <Modal
-          data-bs-theme="dark"
-          size="lg"
-          show={show}
-          onHide={handleClose}
-          backdrop="static"
-          keyboard={false}
-          centered
-      >
-          <Modal.Header closeButton></Modal.Header>
-          <Modal.Body>
-              <YouTube 
-                videoId={videoKey}
-                opts={{
-                  width: "766",
-                  height: "480",
-                  playerVars: {
-                    autoplay: 1, //자동재생 O
-                    rel: 0, //관련 동영상 표시하지 않음
-                  },
-                }}
-              />
-          </Modal.Body>
-      </Modal>
+      {videoData.length > 0 ?
+        <Modal
+            data-bs-theme="dark"
+            size="lg"
+            show={show}
+            onHide={handleClose}
+            backdrop="static"
+            keyboard={false}
+            centered
+        >
+            <Modal.Header closeButton></Modal.Header>
+            <Modal.Body>
+                <YouTube 
+                  videoId={videoKey}
+                  opts={{
+                    width: "766",
+                    height: "480",
+                    playerVars: {
+                      autoplay: 1, //자동재생 O
+                      rel: 0, //관련 동영상 표시하지 않음
+                    },
+                  }}
+                />
+            </Modal.Body>
+        </Modal> : ''
+      }
+      
       <div 
           style={{
               backgroundImage: `url(https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces/${data?.backdrop_path}`,
@@ -121,7 +132,7 @@ const MovieDetailPage = () => {
           <div className='banner-info'>
               <h1>{data?.title}</h1>
               <h2>{data?.tagline}</h2>
-              <Button className='play-btn' onClick={handleShow}><FontAwesomeIcon icon={faPlay} />재생</Button>
+              {videoData?<Button className='play-btn' onClick={handleShow}><FontAwesomeIcon icon={faPlay} />재생</Button>:''}
           </div>
       </div>
       <Container className='main-info-container'>
@@ -148,8 +159,8 @@ const MovieDetailPage = () => {
 
 
           <Row className='related-movie-container'>
-            <div className='title'>{RecommendationsData? '0 results' : 'Related Movies'}</div>
-            {RecommendationsData? <span></span> : (
+            <div className='title'>{RecommendationsData.length === 0 ? '0 results' : 'Related Movies'}</div>
+            {RecommendationsData.length === 0 ? <span></span> : (
               <MovieSlieder
                 movies={RecommendationsData} 
                 responsive={responsive}
@@ -161,7 +172,7 @@ const MovieDetailPage = () => {
 
 
           <Row className='review-container'>
-            <div className='title'>{reviewData? '0 reviews for this movie' : 'Reviews'}</div>
+            <div className='title'>{reviewData.length === 0 ? '0 reviews for this movie' : 'Reviews'}</div>
             {reviewData?.map((review, index) => 
                 <ReviewComponent key={index} review={review}/>
             )}
